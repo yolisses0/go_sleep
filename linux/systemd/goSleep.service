@@ -1,0 +1,12 @@
+[Unit]
+Description=Call the Go Sleep shutdown feature
+# Wants=goSleep.timer
+
+[Service]
+Type=oneshot
+# TODO fix this path
+ExecStart="/home/yolisses/Go Sleep/go_sleep/build/linux/x64/debug/bundle/go_sleep" --shutdown
+ExecStart=echo "Fine"
+
+[Install]
+WantedBy=multi-user.target

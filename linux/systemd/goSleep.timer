@@ -1,0 +1,11 @@
+[Unit]
+Description=Call the Go Sleep shutdown feature
+Requires=goSleep.service
+
+[Timer]
+Unit=goSleep.service
+OnCalendar=*-*-* 00:*:*
+AccuracySec=1us
+
+[Install]
+WantedBy=timers.target
