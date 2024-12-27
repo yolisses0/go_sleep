@@ -48,7 +48,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp"
     },
-    "cmake.sourceDirectory": "/home/yolisses/Go Sleep/go_sleep/linux",
+    "cmake.sourceDirectory": "/home/yolisses/GoSleep/go_sleep/linux",
     "cSpell.words": [
         "yolisses"
     ]
