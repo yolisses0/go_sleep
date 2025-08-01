@@ -15,7 +15,8 @@ class MainApp extends StatelessWidget {
         body: Center(
           child: TextButton(
             onPressed: () {
-              print('test1');
+              // Process.run('shutdown', ['now']);
+              print('shutdown');
             },
             child: Text('Press me'),
           ),
