@@ -17,7 +17,7 @@ Type=simple
 [Install]
 WantedBy=default.target
 """;
-    final file = new File(
+    final file = File(
       '/home/yolisses/.config/systemd/user/go_sleep.service',
     );
     await file.writeAsString(content);
