@@ -1,12 +1,12 @@
 import 'dart:io';
 
 class LinuxScheduler {
-  void schedule() {
+  static void schedule() {
     createService();
   }
 
-  void createService() {
-    final file = """
+  static void createService() async {
+    final content = """
 [Unit]
 Description=Go Sleep
 
@@ -17,7 +17,9 @@ Type=simple
 [Install]
 WantedBy=default.target
 """;
-    final filePath = '/home/yolisses/.config/systemd/user/go_sleep.service';
-    Process.run('echo', [file, '>', filePath]);
+    final file = new File(
+      '/home/yolisses/.config/systemd/user/go_sleep.service',
+    );
+    await file.writeAsString(content);
   }
 }

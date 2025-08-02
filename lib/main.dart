@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_sleep/linux_scheduler.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,6 +18,7 @@ class MainApp extends StatelessWidget {
             onPressed: () {
               // Process.run('shutdown', ['now']);
               print('shutdown');
+              LinuxScheduler.schedule();
             },
             child: Text('Press me'),
           ),
