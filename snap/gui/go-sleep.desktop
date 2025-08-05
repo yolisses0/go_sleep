@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=Health;
+Comment=Powers off the device when it is time to sleep
+Exec=go-sleep
+Icon=${SNAP}/meta/gui/icon.png
+Name=Go Sleep
+Terminal=false
+Type=Application

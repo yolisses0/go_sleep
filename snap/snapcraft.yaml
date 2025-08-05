@@ -1,0 +1,21 @@
+name: go-sleep
+base: core24
+version: "0.1"
+summary: Shuts down the device so you can sleep on time
+description: |
+  Easily create a great sleep routine by automatically shutting down your
+  computer. It includes features to prevent you from simply turning it back on.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps:
+  go-sleep:
+    command: go_sleep
+    extensions: [gnome]
+
+parts:
+  go-sleep:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart
