@@ -1,8 +1,12 @@
 import 'dart:io';
 
 class LinuxScheduler {
-  static final String homeDir = Platform.environment['HOME'] ?? '';
+  static final String homeDir =
+      Platform.environment['SNAP_REAL_HOME'] ??
+      Platform.environment['HOME'] ??
+      '';
   static final servicePath = '$homeDir/.config/systemd/user/go_sleep.service';
+
   // TODO get the from environment
   static final String executablePath =
       '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
