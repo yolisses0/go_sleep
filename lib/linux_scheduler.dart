@@ -7,9 +7,10 @@ class LinuxScheduler {
       '';
   static final servicePath = '$homeDir/.config/systemd/user/go_sleep.service';
 
-  // TODO get the from environment
-  static final String executablePath =
-      '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
+  static final String executablePath = Platform.environment['SNAP'] != null
+      ? 'go-sleep'
+      // For development
+      : '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
 
   static void schedule() {
     createService();
