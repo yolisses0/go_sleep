@@ -28,32 +28,38 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SwitchListTile(
-                title: const Text('Enabled'),
-                value: _isEnabled,
-                onChanged: (bool value) {
-                  setState(() {
-                    _isEnabled = value;
-                  });
-                },
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SwitchListTile(
+                    title: const Text('Enabled'),
+                    value: _isEnabled,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isEnabled = value;
+                      });
+                    },
+                  ),
+                  TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(labelText: 'Time of the day'),
+                    onTap: () => _selectTime(context),
+                    validator: (value) =>
+                        _selectedTime == null ? 'Please select a time' : null,
+                    controller: TextEditingController(
+                      text: _selectedTime?.format(context) ?? '',
+                    ),
+                  ),
+                ],
               ),
-              TextFormField(
-                readOnly: true,
-                decoration: InputDecoration(labelText: 'Time of the day'),
-                onTap: () => _selectTime(context),
-                validator: (value) =>
-                    _selectedTime == null ? 'Please select a time' : null,
-                controller: TextEditingController(
-                  text: _selectedTime?.format(context) ?? '',
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
