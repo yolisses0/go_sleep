@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 class LinuxScheduler {
@@ -19,8 +20,7 @@ class LinuxScheduler {
 
   static void createService() {
     final content =
-        """
-[Unit]
+        """[Unit]
 Description=Go Sleep
 
 [Service]
@@ -41,13 +41,26 @@ WantedBy=default.target
 
   static void createTimer() async {}
 
-  static void runCommand(String command) {
-    final result = Process.runSync(command, []);
-    if (result.stderr.toString().isNotEmpty) throw Exception(result.stderr);
+  static void runCommand(
+    String command,
+    List<String> arguments, {
+    bool stopOnError = false,
+  }) {
+    final result = Process.runSync(command, arguments);
+
+    final text = result.stderr.toString();
+    if (text.isNotEmpty) {
+      if (stopOnError) {
+        throw Exception(text);
+      } else {
+        log(text);
+      }
+    }
   }
 
   static void startService() {
-    runCommand('systemctl --user unmask go_sleep.service');
-    runCommand('systemctl --user start go_sleep.service');
+    runCommand('systemctl', ['--user', 'unmask', 'go_sleep.service']);
+    runCommand('systemctl', ['--user', 'daemon-reload']);
+    runCommand('systemctl', ['--user', 'start', 'go_sleep.service']);
   }
 }
