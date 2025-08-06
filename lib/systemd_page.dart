@@ -4,9 +4,14 @@ import 'package:go_sleep/linux_scheduler.dart';
 class SystemdPage extends StatelessWidget {
   const SystemdPage({super.key});
 
+  final LinuxScheduler _linuxScheduler = const LinuxScheduler(
+    path:
+        "/home/yolisses/GoSleep/go_sleep/build/linux/x64/debug/bundle/go_sleep",
+  );
+
   void onPressed() {
-    LinuxScheduler.createService();
-    LinuxScheduler.startService();
+    _linuxScheduler.createService();
+    _linuxScheduler.startService();
   }
 
   @override
