@@ -8,7 +8,7 @@ class LinuxScheduler {
   static final servicePath = '$homeDir/.config/systemd/user/go_sleep.service';
 
   static final String executablePath = Platform.environment['SNAP'] != null
-      ? 'go-sleep'
+      ? '/snap/bin/go-sleep'
       // For development
       : '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
 
