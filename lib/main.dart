@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_sleep/settings_page.dart';
+import 'package:go_sleep/systemd_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         brightness: Brightness.dark,
       ),
-      home: SettingsPage(),
+      home: SystemdPage(),
     );
   }
 }
