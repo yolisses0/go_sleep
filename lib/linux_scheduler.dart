@@ -34,7 +34,7 @@ WantedBy=default.target
       'go_sleep.service',
     ]);
     if ((result1.stderr as String).isNotEmpty) {
-      throw new Exception(result1.stderr);
+      throw Exception(result1.stderr);
     }
 
     final result2 = Process.runSync('systemctl', [
@@ -43,7 +43,7 @@ WantedBy=default.target
       'go_sleep.service',
     ]);
     if ((result2.stderr as String).isNotEmpty) {
-      throw new Exception(result1.stderr);
+      throw Exception(result1.stderr);
     }
   }
 }
