@@ -28,7 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Time Form')),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
