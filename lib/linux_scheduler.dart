@@ -40,23 +40,13 @@ WantedBy=default.target
 
   static void createTimer() async {}
 
-  static void startService() {
-    final result1 = Process.runSync('systemctl', [
-      '--user',
-      'unmask',
-      'go_sleep.service',
-    ]);
-    if ((result1.stderr as String).isNotEmpty) {
-      throw Exception(result1.stderr);
-    }
+  static void runCommand(String command) {
+    final result = Process.runSync(command, []);
+    if (result.stderr.toString().isNotEmpty) throw Exception(result.stderr);
+  }
 
-    final result2 = Process.runSync('systemctl', [
-      '--user',
-      'start',
-      'go_sleep.service',
-    ]);
-    if ((result2.stderr as String).isNotEmpty) {
-      throw Exception(result1.stderr);
-    }
+  static void startService() {
+    runCommand('systemctl --user unmask go_sleep.service');
+    runCommand('systemctl --user start go_sleep.service');
   }
 }
