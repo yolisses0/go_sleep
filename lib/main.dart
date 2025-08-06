@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_sleep/systemd_page.dart';
 
-void main() {
+void main(List<String> args) {
+  print('args');
+  print(args);
+  final shouldSleep = args.contains('--sleep');
+  print(shouldSleep);
   runApp(const MyApp());
 }
 

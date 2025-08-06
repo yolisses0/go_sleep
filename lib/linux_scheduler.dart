@@ -15,7 +15,7 @@ class LinuxScheduler {
 Description=Go Sleep
 
 [Service]
-ExecStart=$path
+ExecStart=$path --sleep
 Type=simple
 
 [Install]
