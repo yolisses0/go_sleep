@@ -46,3 +46,6 @@ app.*.map.json
 
 # Just for quick drafts
 sketch
+
+# Snap built file
+*.snap
