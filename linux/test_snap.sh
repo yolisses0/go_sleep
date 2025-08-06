@@ -1,0 +1,1 @@
+snapcraft && sudo snap install --dangerous --devmode ./go-sleep_0.1_amd64.snap;
