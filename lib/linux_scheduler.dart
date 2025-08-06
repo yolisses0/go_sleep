@@ -1,11 +1,11 @@
 import 'dart:io';
 
 class LinuxScheduler {
-  // TODO replace these hard coded values
   static final String homeDir = Platform.environment['HOME'] ?? '';
   static final servicePath = '$homeDir/.config/systemd/user/go_sleep.service';
-  static final String path =
-      "/home/yolisses/GoSleep/go_sleep/build/linux/x64/debug/bundle/go_sleep";
+  // TODO get the from environment
+  static final String executablePath =
+      '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
 
   static void schedule() {
     createService();
@@ -19,7 +19,7 @@ class LinuxScheduler {
 Description=Go Sleep
 
 [Service]
-ExecStart=$path --sleep
+ExecStart=$executablePath --sleep
 Type=simple
 
 [Install]
