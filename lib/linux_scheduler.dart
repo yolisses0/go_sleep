@@ -1,16 +1,18 @@
 import 'dart:io';
 
 class LinuxScheduler {
-  const LinuxScheduler({required this.path});
+  // TODO replace these hard coded values
+  static final servicePath =
+      '/home/yolisses/.config/systemd/user/go_sleep.service';
+  static final String path =
+      "/home/yolisses/GoSleep/go_sleep/build/linux/x64/debug/bundle/go_sleep";
 
-  final String path;
-
-  void schedule() {
+  static void schedule() {
     createService();
     createTimer();
   }
 
-  void createService() {
+  static void createService() {
     final content =
         """
 [Unit]
@@ -23,15 +25,18 @@ Type=simple
 [Install]
 WantedBy=default.target
 """;
-    final file = File('/home/yolisses/.config/systemd/user/go_sleep.service');
+    final file = File(servicePath);
     file.writeAsStringSync(content);
   }
 
-  void deleteService() {}
+  static void deleteService() {
+    final file = File(servicePath);
+    file.deleteSync();
+  }
 
-  void createTimer() async {}
+  static void createTimer() async {}
 
-  void startService() {
+  static void startService() {
     final result1 = Process.runSync('systemctl', [
       '--user',
       'unmask',
