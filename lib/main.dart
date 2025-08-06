@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_sleep/my_home_page.dart';
+import 'package:go_sleep/settings_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SettingsPage(),
     );
   }
 }
