@@ -1,0 +1,7 @@
+#!/bin/sh
+systemctl --user stop go_sleep.timer;
+systemctl --user disable go_sleep.timer;
+systemctl --user stop go_sleep.service;
+rm ~/.config/systemd/user/go_sleep.timer;
+rm ~/.config/systemd/user/go_sleep.service;
+systemctl --user daemon-reload;
