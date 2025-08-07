@@ -16,11 +16,6 @@ class LinuxScheduler {
       // For development
       : '${Directory.current.path}/build/linux/x64/debug/bundle/go_sleep';
 
-  static void schedule() {
-    createService();
-    createTimer();
-  }
-
   static void createService() {
     final content =
         """[Unit]
@@ -67,17 +62,20 @@ WantedBy=default.target
     return result;
   }
 
-  static void createTimer() async {
-    final content = """[Unit]
-Description=Run test1
-
-[Timer]
-OnCalendar=18..20:*:00/1
-AccuracySec=100ms
-
-[Install]
-WantedBy=timers.target""";
-    final file = File(servicePath);
+  static void createTimer(TimeOfDay start, TimeOfDay end) async {
+    final lines =[ ];
+    lines.add('[Unit]');
+    lines.add('Description=Go Sleep scheduled start');
+    lines.add('[Timer]');
+    lines.add('AccuracySec=100ms');
+    final onCalendars = createOnCalendar(start, end);
+    for (var onCalendar in onCalendars) {
+      lines.add('OnCalendar $onCalendar');
+    }
+    lines.add('[Install]');
+    lines.add('WantedBy=timers.target');
+    final content = lines.join('\n');
+    final file = File(timerPath);
     file.writeAsStringSync(content);
   }
 
