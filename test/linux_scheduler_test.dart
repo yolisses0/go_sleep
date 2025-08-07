@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_sleep/linux_scheduler.dart';
@@ -81,5 +83,24 @@ void main() {
       ),
       ["5:6..59:0/1", "6..23:*:0/1", "0..2:*:0/1", "3:0..4:0/1"],
     );
+  });
+
+  test('monkey', () async {
+    List<String> strings = [];
+    for (var startHour in [0, 1, 2, 4, 20, 21, 22, 23]) {
+      for (var endHour in [0, 1, 2, 4, 20, 21, 22, 23]) {
+        for (var startMinute in [0, 1, 2, 4, 56, 57, 58, 59]) {
+          for (var endMinute in [0, 1, 2, 4, 56, 57, 58, 59]) {
+            final newStrings = LinuxScheduler.createOnCalendar(
+              TimeOfDay(hour: startHour, minute: startMinute),
+              TimeOfDay(hour: endHour, minute: endMinute),
+            );
+            strings.addAll(newStrings);
+          }
+        }
+      }
+    }
+    final result = Process.runSync('systemd-analyze', ['calendar', ...strings]);
+    expect(result.stderr.toString(), '');
   });
 }
