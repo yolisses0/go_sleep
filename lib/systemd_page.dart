@@ -16,8 +16,8 @@ class SystemdPage extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             LinuxScheduler.createTimer(
-              TimeOfDay(hour: 10, minute: 0),
-              TimeOfDay(hour: 11, minute: 0),
+              TimeOfDay(hour: 15, minute: 2),
+              TimeOfDay(hour: 3, minute: 0),
             );
           },
           child: Text('Create timer'),
@@ -27,8 +27,16 @@ class SystemdPage extends StatelessWidget {
           child: Text('Start service'),
         ),
         ElevatedButton(
+          onPressed: LinuxScheduler.startTimer,
+          child: Text('Start timer'),
+        ),
+        ElevatedButton(
           onPressed: LinuxScheduler.deleteService,
           child: Text('Delete service'),
+        ),
+        ElevatedButton(
+          onPressed: LinuxScheduler.deleteTimer,
+          child: Text('Delete timer'),
         ),
       ],
     );

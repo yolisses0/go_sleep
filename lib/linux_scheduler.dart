@@ -32,9 +32,17 @@ WantedBy=default.target
     file.writeAsStringSync(content);
   }
 
-  static void deleteService() {
+  static void deleteService() async {
+    await runCommand('systemctl', ['--user', 'stop', 'go_sleep.service']);
     final file = File(servicePath);
-    file.deleteSync();
+    await file.delete();
+  }
+
+  static void deleteTimer() async {
+    await runCommand('systemctl', ['--user', 'stop', 'go_sleep.timer']);
+    await runCommand('systemctl', ['--user', 'disable', 'go_sleep.timer']);
+    final file = File(timerPath);
+    await file.delete();
   }
 
   static List<String> createOnCalendar(TimeOfDay start, TimeOfDay end) {
@@ -70,7 +78,7 @@ WantedBy=default.target
     lines.add('AccuracySec=100ms');
     final onCalendars = createOnCalendar(start, end);
     for (var onCalendar in onCalendars) {
-      lines.add('OnCalendar $onCalendar');
+      lines.add('OnCalendar=$onCalendar');
     }
     lines.add('[Install]');
     lines.add('WantedBy=timers.target');
@@ -79,26 +87,25 @@ WantedBy=default.target
     file.writeAsStringSync(content);
   }
 
-  static void runCommand(
-    String command,
-    List<String> arguments, {
-    bool stopOnError = false,
-  }) {
-    final result = Process.runSync(command, arguments);
-
-    final text = result.stderr.toString();
-    if (text.isNotEmpty) {
-      if (stopOnError) {
-        throw Exception(text);
-      } else {
-        log(text);
-      }
+  static Future runCommand(String command, List<String> arguments) async {
+    final result = await Process.run(command, arguments);
+    log(result.stdout.toString());
+    log(result.stderr.toString());
+    if (result.exitCode != 0) {
+      throw Exception("Exit code different than zero");
     }
   }
 
-  static void startService() {
-    runCommand('systemctl', ['--user', 'unmask', 'go_sleep.service']);
-    runCommand('systemctl', ['--user', 'daemon-reload']);
-    runCommand('systemctl', ['--user', 'start', 'go_sleep.service']);
+  static void startService() async {
+    await runCommand('systemctl', ['--user', 'unmask', 'go_sleep.service']);
+    await runCommand('systemctl', ['--user', 'daemon-reload']);
+    await runCommand('systemctl', ['--user', 'start', 'go_sleep.service']);
+  }
+
+  static void startTimer() async {
+    await runCommand('systemctl', ['--user', 'unmask', 'go_sleep.timer']);
+    await runCommand('systemctl', ['--user', 'daemon-reload']);
+    await runCommand('systemctl', ['--user', 'enable', 'go_sleep.timer']);
+    await runCommand('systemctl', ['--user', 'start', 'go_sleep.timer']);
   }
 }
