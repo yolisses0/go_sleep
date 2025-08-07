@@ -59,8 +59,8 @@ WantedBy=default.target
       if (24 - start.hour > 1) {
         result.add('${start.hour + 1}..23:*:0/1');
       }
-      if (end.hour > 1) {
-        result.add('${end.hour - 1}..${end.hour}:*:0/1');
+      if (end.hour > 0) {
+        result.add('0..${end.hour - 1}:*:0/1');
       }
       result.add('${end.hour}:0..${end.minute}:0/1');
     }
