@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_sleep/overlay_page.dart';
 import 'package:go_sleep/sleep_page.dart';
-import 'package:go_sleep/systemd_page.dart';
 
 void main(List<String> args) {
   final shouldSleep = args.contains('--sleep');
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Go Sleep',
       theme: ThemeData(brightness: Brightness.dark),
-      home: shouldSleep ? SleepPage() : SystemdPage(),
+      home: shouldSleep ? SleepPage() : OverlayPage(),
     );
   }
 }
