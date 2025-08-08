@@ -6,9 +6,9 @@ plugins {
 }
 
 android {
-    namespace = "com.yolisses.go_sleep"
+    namespace = "com.example.go_sleep"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = 36
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.yolisses.go_sleep"
+        applicationId = "com.example.go_sleep"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
