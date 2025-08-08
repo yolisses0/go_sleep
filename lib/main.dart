@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_sleep/overlay_content.dart';
 import 'package:go_sleep/overlay_page.dart';
@@ -13,15 +12,13 @@ void main(List<String> args) async {
   }
 
   final shouldSleep = args.contains('--sleep');
-  final isAndroid = defaultTargetPlatform == TargetPlatform.android;
-  runApp(MyApp(shouldSleep: shouldSleep, isAndroid: isAndroid));
+  runApp(MyApp(shouldSleep: shouldSleep));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.shouldSleep, required this.isAndroid});
+  const MyApp({super.key, required this.shouldSleep});
 
   final bool shouldSleep;
-  final bool isAndroid;
 
   // This widget is the root of your application.
   @override
