@@ -32,8 +32,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  bool _isShowingWindow = false;
-  bool _isUpdatedWindow = false;
   SystemWindowPrefMode prefMode = SystemWindowPrefMode.OVERLAY;
   static const String _mainAppPort = 'MainApp';
   final _receivePort = ReceivePort();
@@ -86,80 +84,62 @@ class _MyAppState extends State<MyApp> {
     await SystemAlertWindow.requestPermissions(prefMode: prefMode);
   }
 
-  void _showOverlayWindow() async {
-    if (!_isShowingWindow) {
-      await SystemAlertWindow.sendMessageToOverlay('show system window');
-      SystemAlertWindow.showSystemWindow(
-        height: 200,
-        width: MediaQuery.of(context).size.width.floor(),
-        gravity: SystemWindowGravity.CENTER,
-        prefMode: prefMode,
-        layoutParamFlags: [SystemWindowFlags.FLAG_NOT_FOCUSABLE],
-      );
-      setState(() {
-        _isShowingWindow = true;
-      });
-    } else if (!_isUpdatedWindow) {
-      await SystemAlertWindow.sendMessageToOverlay('update system window');
-      SystemAlertWindow.updateSystemWindow(
-        height: 200,
-        width: MediaQuery.of(context).size.width.floor(),
-        gravity: SystemWindowGravity.CENTER,
-        prefMode: prefMode,
-        layoutParamFlags: [
-          SystemWindowFlags.FLAG_NOT_FOCUSABLE,
-          SystemWindowFlags.FLAG_NOT_TOUCHABLE,
-        ],
-        // isDisableClicks: true
-      );
-      setState(() {
-        _isUpdatedWindow = true;
-        SystemAlertWindow.sendMessageToOverlay(_isUpdatedWindow);
-      });
-    } else {
-      setState(() {
-        _isShowingWindow = false;
-        _isUpdatedWindow = false;
-        SystemAlertWindow.sendMessageToOverlay(_isUpdatedWindow);
-      });
-      SystemAlertWindow.closeSystemWindow(prefMode: prefMode);
-    }
+  void _openOverlayWindow() async {
+    await SystemAlertWindow.sendMessageToOverlay('show system window');
+    SystemAlertWindow.showSystemWindow(
+      height: 200,
+      width: MediaQuery.of(context).size.width.floor(),
+      gravity: SystemWindowGravity.CENTER,
+      prefMode: prefMode,
+      layoutParamFlags: [SystemWindowFlags.FLAG_NOT_FOCUSABLE],
+    );
+  }
+
+  void _updateOverlayWindow() async {
+    await SystemAlertWindow.sendMessageToOverlay('update system window');
+    SystemAlertWindow.updateSystemWindow(
+      height: 200,
+      width: MediaQuery.of(context).size.width.floor(),
+      gravity: SystemWindowGravity.CENTER,
+      prefMode: prefMode,
+      layoutParamFlags: [
+        SystemWindowFlags.FLAG_NOT_FOCUSABLE,
+        SystemWindowFlags.FLAG_NOT_TOUCHABLE,
+      ],
+      // isDisableClicks: true
+    );
+  }
+
+  void _closeOverlayWindow() async {
+    SystemAlertWindow.closeSystemWindow(prefMode: prefMode);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'System Alert Window Example App \n with flutterview',
-          ),
-        ),
         body: Center(
-          child: Column(
-            children: <Widget>[
+          child: ListView(
+            children: [
               Text('Running on: $_platformVersion\n'),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: _showOverlayWindow,
-                  child: !_isShowingWindow
-                      ? Text("Show system alert window")
-                      : !_isUpdatedWindow
-                      ? Text("Update system alert window")
-                      : Text("Close system alert window"),
-                ),
+              ElevatedButton(
+                onPressed: _openOverlayWindow,
+                child: Text("Open overlay windor"),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () => SystemAlertWindow.sendMessageToOverlay(
-                    "message from main",
-                  ),
-                  child: Text("send message to overlay"),
-                ),
+              ElevatedButton(
+                onPressed: _updateOverlayWindow,
+                child: Text("Update overlay windor"),
               ),
-              TextButton(
+              ElevatedButton(
+                onPressed: _closeOverlayWindow,
+                child: Text("Close overlay windor"),
+              ),
+              ElevatedButton(
+                onPressed: () =>
+                    SystemAlertWindow.sendMessageToOverlay("message from main"),
+                child: Text("send message to overlay"),
+              ),
+              ElevatedButton(
                 onPressed: () async {
                   String? logFilePath = await SystemAlertWindow.getLogFile;
                   if (logFilePath != null && logFilePath.isNotEmpty) {
