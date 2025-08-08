@@ -49,3 +49,6 @@ sketch
 
 # Snap built file
 *.snap
+
+# Transient file that appears while compiling
+*.salive
