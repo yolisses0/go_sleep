@@ -5,18 +5,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_sleep/custom_overlay.dart';
 import 'package:system_alert_window/system_alert_window.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
-}
-
-class CustomOverlay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('hello')));
-  }
 }
 
 @pragma("vm:entry-point")
