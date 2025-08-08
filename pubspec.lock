@@ -153,7 +153,7 @@ packages:
     source: hosted
     version: "1.9.1"
   pay:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: pay
       sha256: "83b15697797f8013bd7693193b9f657bacfe40c5d0a31d4e084caed5fe22d29c"
@@ -222,7 +222,7 @@ packages:
     source: hosted
     version: "1.4.1"
   system_alert_window:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: system_alert_window
       sha256: "26933dcd93b1fc72d8736df0d80b54f3b895554ea7e370883fb8185473f8ea89"
