@@ -118,15 +118,15 @@ class _MyAppState extends State<MyApp> {
               Text('Running on: $_platformVersion\n'),
               ElevatedButton(
                 onPressed: _openOverlayWindow,
-                child: Text("Open overlay windor"),
+                child: Text("Open overlay"),
               ),
               ElevatedButton(
                 onPressed: _updateOverlayWindow,
-                child: Text("Update overlay windor"),
+                child: Text("Update overlay"),
               ),
               ElevatedButton(
                 onPressed: _closeOverlayWindow,
-                child: Text("Close overlay windor"),
+                child: Text("Close overlay"),
               ),
               ElevatedButton(
                 onPressed: () =>
