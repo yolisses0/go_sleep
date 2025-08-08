@@ -141,28 +141,22 @@ class _MyAppState extends State<MyApp> {
               Text('Running on: $_platformVersion\n'),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: MaterialButton(
+                child: ElevatedButton(
                   onPressed: _showOverlayWindow,
-                  textColor: Colors.white,
                   child: !_isShowingWindow
                       ? Text("Show system alert window")
                       : !_isUpdatedWindow
                       ? Text("Update system alert window")
                       : Text("Close system alert window"),
-                  color: Colors.deepOrange,
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: MaterialButton(
+                child: ElevatedButton(
                   onPressed: () => SystemAlertWindow.sendMessageToOverlay(
                     "message from main",
                   ),
-                  textColor: Colors.white,
                   child: Text("send message to overlay"),
-                  color: Colors.deepOrange,
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                 ),
               ),
               TextButton(
