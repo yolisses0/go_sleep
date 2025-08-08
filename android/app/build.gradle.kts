@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.go_sleep"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

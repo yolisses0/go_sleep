@@ -1,154 +1,145 @@
-import 'dart:async';
-import 'dart:developer';
-import 'dart:isolate';
-import 'dart:ui';
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:go_sleep/custom_overlay.dart';
-import 'package:system_alert_window/system_alert_window.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:pay/pay.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const PayMaterialApp());
 }
 
-@pragma("vm:entry-point")
-void overlayMain() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: CustomOverlay()));
-}
+const _paymentItems = [
+  PaymentItem(
+    label: 'Total',
+    amount: '99.99',
+    status: PaymentItemStatus.final_price,
+  ),
+];
 
-class MyApp extends StatefulWidget {
+class PayMaterialApp extends StatelessWidget {
+  const PayMaterialApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Pay for Flutter Demo',
+      localizationsDelegates: [
+        ...GlobalMaterialLocalizations.delegates,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: PaySampleApp(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  SystemWindowPrefMode prefMode = SystemWindowPrefMode.OVERLAY;
-  static const String _mainAppPort = 'MainApp';
-  final _receivePort = ReceivePort();
-  SendPort? homePort;
-  String? latestMessageFromOverlay;
+class PaySampleApp extends StatefulWidget {
+  const PaySampleApp({super.key});
+
+  @override
+  State<PaySampleApp> createState() => _PaySampleAppState();
+}
+
+class _PaySampleAppState extends State<PaySampleApp> {
+  late final Future<PaymentConfiguration> _googlePayConfigFuture;
 
   @override
   void initState() {
     super.initState();
-    _initPlatformState();
-    _requestPermissions();
-    if (homePort != null) return;
-    final res = IsolateNameServer.registerPortWithName(
-      _receivePort.sendPort,
-      _mainAppPort,
-    );
-    log("$res: OVERLAY");
-    _receivePort.listen((message) {
-      log("message from OVERLAY: $message");
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> _initPlatformState() async {
-    // await SystemAlertWindow.enableLogs(true);
-    String? platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await SystemAlertWindow.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-    if (platformVersion != null)
-      setState(() {
-        _platformVersion = platformVersion!;
-      });
-  }
-
-  Future<void> _requestPermissions() async {
-    await SystemAlertWindow.requestPermissions(prefMode: prefMode);
-  }
-
-  void _openOverlayWindow() async {
-    await SystemAlertWindow.sendMessageToOverlay('show system window');
-    SystemAlertWindow.showSystemWindow(
-      height: 200,
-      width: MediaQuery.of(context).size.width.floor(),
-      gravity: SystemWindowGravity.CENTER,
-      prefMode: prefMode,
-      layoutParamFlags: [SystemWindowFlags.FLAG_NOT_FOCUSABLE],
+    _googlePayConfigFuture = PaymentConfiguration.fromAsset(
+      'default_google_pay_config.json',
     );
   }
 
-  void _updateOverlayWindow() async {
-    await SystemAlertWindow.sendMessageToOverlay('update system window');
-    SystemAlertWindow.updateSystemWindow(
-      height: 200,
-      width: MediaQuery.of(context).size.width.floor(),
-      gravity: SystemWindowGravity.CENTER,
-      prefMode: prefMode,
-      layoutParamFlags: [
-        SystemWindowFlags.FLAG_NOT_FOCUSABLE,
-        SystemWindowFlags.FLAG_NOT_TOUCHABLE,
-      ],
-      // isDisableClicks: true
-    );
+  void onGooglePayResult(paymentResult) {
+    debugPrint(paymentResult.toString());
   }
 
-  void _closeOverlayWindow() async {
-    SystemAlertWindow.closeSystemWindow(prefMode: prefMode);
+  void onApplePayResult(paymentResult) {
+    debugPrint(paymentResult.toString());
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ListView(
-            children: [
-              Text('Running on: $_platformVersion\n'),
-              ElevatedButton(
-                onPressed: _openOverlayWindow,
-                child: Text("Open overlay"),
-              ),
-              ElevatedButton(
-                onPressed: _updateOverlayWindow,
-                child: Text("Update overlay"),
-              ),
-              ElevatedButton(
-                onPressed: _closeOverlayWindow,
-                child: Text("Close overlay"),
-              ),
-              ElevatedButton(
-                onPressed: () =>
-                    SystemAlertWindow.sendMessageToOverlay("message from main"),
-                child: Text("send message to overlay"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  String? logFilePath = await SystemAlertWindow.getLogFile;
-                  if (logFilePath != null && logFilePath.isNotEmpty) {
-                    // final files = <XFile>[];
-                    // files.add(XFile(logFilePath, name: "Log File from SAW"));
-                    // await Share.shareXFiles(files);
-                  } else {
-                    print("Path is empty");
-                  }
-                },
-                child: Text("Share Log file"),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('T-shirt Shop')),
+      backgroundColor: Colors.white,
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            child: const Image(
+              image: AssetImage('assets/images/ts_10_11019a.jpg'),
+              height: 350,
+            ),
           ),
-        ),
+          const Text(
+            'Amanda\'s Polo Shirt',
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xff333333),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            '\$50.20',
+            style: TextStyle(color: Color(0xff777777), fontSize: 15),
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            'Description',
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xff333333),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            'A versatile full-zip that you can wear all day long and even...',
+            style: TextStyle(color: Color(0xff777777), fontSize: 15),
+          ),
+          // Example pay button configured using an asset
+          FutureBuilder<PaymentConfiguration>(
+            future: _googlePayConfigFuture,
+            builder: (context, snapshot) => snapshot.hasData
+                ? GooglePayButton(
+                    paymentConfiguration: snapshot.data!,
+                    paymentItems: _paymentItems,
+                    type: GooglePayButtonType.buy,
+                    margin: const EdgeInsets.only(top: 15.0),
+                    onPaymentResult: onGooglePayResult,
+                    loadingIndicator: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
+          // Example pay button configured using a string
+          // ApplePayButton(
+          //   paymentConfiguration: payment_configurations.defaultApplePayConfig,
+          //   paymentItems: _paymentItems,
+          //   style: ApplePayButtonStyle.black,
+          //   type: ApplePayButtonType.buy,
+          //   margin: const EdgeInsets.only(top: 15.0),
+          //   onPaymentResult: onApplePayResult,
+          //   loadingIndicator: const Center(child: CircularProgressIndicator()),
+          // ),
+          const SizedBox(height: 15),
+        ],
       ),
     );
   }
