@@ -1,5 +1,5 @@
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 class OverlayPage extends StatefulWidget {
   const OverlayPage({super.key});
@@ -9,17 +9,41 @@ class OverlayPage extends StatefulWidget {
 }
 
 class _OverlayPageState extends State<OverlayPage> {
+  bool _hasOverlayPermission = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPermission();
+  }
+
+  Future<void> _checkPermission() async {
+    final hasPermission = await FlutterOverlayWindow.isPermissionGranted();
+    setState(() => _hasOverlayPermission = hasPermission);
+  }
+
   Future<void> requestOverlayPermission() async {
-    const intent = AndroidIntent(
-      action: 'android.settings.action.MANAGE_OVERLAY_PERMISSION',
+    if (!_hasOverlayPermission) {
+      await FlutterOverlayWindow.requestPermission();
+      await _checkPermission();
+    } else {
+      await _showOverlay();
+    }
+  }
+
+  Future<void> _showOverlay() async {
+    await FlutterOverlayWindow.showOverlay(
+      enableDrag: true,
+      height: MediaQuery.of(context).size.height.toInt(),
+      width: MediaQuery.of(context).size.width.toInt(),
+      alignment: OverlayAlignment.center,
     );
-    await intent.launch();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.95),
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -36,7 +60,11 @@ class _OverlayPageState extends State<OverlayPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: requestOverlayPermission,
-                child: const Text('Request Overlay Permission'),
+                child: Text(
+                  _hasOverlayPermission
+                      ? 'Show Overlay'
+                      : 'Request Overlay Permission',
+                ),
               ),
             ],
           ),
