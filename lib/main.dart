@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Go Sleep',
-      theme: ThemeData(),
+      theme: ThemeData(splashColor: const Color(0xFF784421)),
       home: shouldSleep ? SleepPage() : SystemdPage(),
     );
   }
