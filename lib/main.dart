@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Go Sleep',
-      theme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData(),
       home: shouldSleep ? SleepPage() : OverlayPage(),
     );
   }
