@@ -48,14 +48,14 @@ class _MyAppState extends State<MyApp> {
               value: enabled,
             ),
             ListTile(
-              title: Text("Start Time"),
+              title: Text("Time to shutdown"),
               trailing: TextButton(
                 onPressed: () => _selectTime(context, true),
                 child: Text('${startTime.format(context)}'),
               ),
             ),
             ListTile(
-              title: Text("End Time"),
+              title: Text("Time to allow usage"),
               trailing: TextButton(
                 onPressed: () => _selectTime(context, false),
                 child: Text('${endTime.format(context)}'),
