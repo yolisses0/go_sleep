@@ -51,12 +51,24 @@ class _MyAppState extends State<MyApp> {
               ),
               ListTile(
                 title: Text("Time to shutdown"),
-                trailing: Text(startTime.format(context)),
+                trailing: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Text(
+                    startTime.format(context),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
                 onTap: () => _selectTime(context, true),
               ),
               ListTile(
                 title: Text("Time to allow usage"),
-                trailing: Text(endTime.format(context)),
+                trailing: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Text(
+                    endTime.format(context),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
                 onTap: () => _selectTime(context, false),
               ),
             ],
