@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_sleep/linux_scheduler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,8 +45,45 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool enabled = false;
-  TimeOfDay startTime = const TimeOfDay(hour: 22, minute: 0); // 10 PM default
-  TimeOfDay endTime = const TimeOfDay(hour: 7, minute: 0); // 7 AM default
+  TimeOfDay startTime = const TimeOfDay(hour: 22, minute: 0);
+  TimeOfDay endTime = const TimeOfDay(hour: 7, minute: 0);
+
+  void _handleScheduleToggle(bool value) {
+    setState(() {
+      enabled = value;
+    });
+
+    if (value) {
+      try {
+        LinuxScheduler.createService();
+        LinuxScheduler.createTimer(startTime, endTime);
+        LinuxScheduler.startService();
+        LinuxScheduler.startTimer();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to enable scheduling'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        setState(() {
+          enabled = false;
+        });
+      }
+    } else {
+      try {
+        LinuxScheduler.deleteService();
+        LinuxScheduler.deleteTimer();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to disable scheduling'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -60,6 +98,21 @@ class _HomePageState extends State<HomePage> {
           endTime = picked;
         }
       });
+
+      // Update scheduler if enabled
+      if (enabled) {
+        try {
+          LinuxScheduler.createTimer(startTime, endTime);
+          LinuxScheduler.startTimer();
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to update schedule'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -72,11 +125,7 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             children: [
               SwitchListTile(
-                onChanged: (value) {
-                  setState(() {
-                    enabled = value;
-                  });
-                },
+                onChanged: _handleScheduleToggle,
                 title: const Text("Enabled"),
                 value: enabled,
               ),
