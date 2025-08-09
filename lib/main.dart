@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_sleep/linux_scheduler.dart';
+import 'package:go_sleep/time_graph.dart';
 
 void main() {
   runApp(const MyApp());
@@ -124,6 +125,16 @@ class _HomePageState extends State<HomePage> {
           constraints: const BoxConstraints(maxWidth: 600),
           child: ListView(
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: TimeGraph(
+                    shutdownTime: startTime,
+                    wakeupTime: endTime,
+                    size: 200,
+                  ),
+                ),
+              ),
               SwitchListTile(
                 onChanged: _handleScheduleToggle,
                 title: const Text("Enabled"),
@@ -157,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onTap: () => _selectTime(context, false),
               ),
+
               SwitchListTile(
                 onChanged: (_) => widget.onThemeToggle(),
                 title: const Text("Dark Mode"),
