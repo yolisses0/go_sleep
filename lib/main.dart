@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -13,25 +13,55 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool enabled = false;
+  TimeOfDay startTime = TimeOfDay(hour: 22, minute: 0); // 10 PM default
+  TimeOfDay endTime = TimeOfDay(hour: 7, minute: 0); // 7 AM default
+
+  Future<void> _selectTime(BuildContext context, bool isStartTime) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: isStartTime ? startTime : endTime,
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStartTime) {
+          startTime = picked;
+        } else {
+          endTime = picked;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ListView(
-            children: [
-              SwitchListTile(
-                onChanged: (value) {
-                  setState(() {
-                    enabled = value;
-                  });
-                },
-                title: Text("Enabled"),
-                value: enabled,
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children: [
+            SwitchListTile(
+              onChanged: (value) {
+                setState(() {
+                  enabled = value;
+                });
+              },
+              title: Text("Enabled"),
+              value: enabled,
+            ),
+            ListTile(
+              title: Text("Start Time"),
+              trailing: TextButton(
+                onPressed: () => _selectTime(context, true),
+                child: Text('${startTime.format(context)}'),
               ),
-            ],
-          ),
+            ),
+            ListTile(
+              title: Text("End Time"),
+              trailing: TextButton(
+                onPressed: () => _selectTime(context, false),
+                child: Text('${endTime.format(context)}'),
+              ),
+            ),
+          ],
         ),
       ),
     );
