@@ -86,6 +86,13 @@ class TimeGraphPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
+    // Text style for hour labels
+    const textStyle = TextStyle(
+      color: Colors.grey,
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    );
+
     for (int hour = 0; hour < 24; hour++) {
       final angle = (hour - 6) * (pi / 12);
       final markerStart = Offset(
@@ -98,6 +105,33 @@ class TimeGraphPainter extends CustomPainter {
       );
 
       canvas.drawLine(markerStart, markerEnd, markerPaint);
+
+      // Add text for specific hours
+      if (hour == 0 || hour == 6 || hour == 12 || hour == 18) {
+        final textSpan = TextSpan(
+          text: '${hour.toString().padLeft(2, '0')}:00',
+          style: textStyle,
+        );
+        final textPainter = TextPainter(
+          text: textSpan,
+          textDirection: TextDirection.ltr,
+        );
+        textPainter.layout();
+
+        // Position text inside the circle (at 70% of the radius instead of 80%)instead of 80%)
+        final textAngle = (hour - 6) * (pi / 12);
+        final textRadius =
+            radius * 0.7; // Changed from 0.8 to 0.7 // Changed from 0.8 to 0.7
+        final textCenter = Offset(
+          center.dx + textRadius * cos(textAngle),
+          center.dy + textRadius * sin(textAngle),
+        );
+
+        textPainter.paint(
+          canvas,
+          textCenter.translate(-textPainter.width / 2, -textPainter.height / 2),
+        );
+      }
     }
   }
 
