@@ -67,9 +67,11 @@ class TimeGraphPainter extends CustomPainter {
   }
 
   double _timeToAngle(TimeOfDay time) {
-    // Convert time to angle (starting from 12 o'clock)
+    // Convert time to angle (starting from 12 o'clock position)
     final hours = time.hour + time.minute / 60;
-    return (hours - 6) * (pi / 6); // Subtract 6 to start from right side
+    // Multiply by (pi/12) to convert 24 hours to 2π radians
+    // Subtract pi/2 to start from top (12 o'clock position)
+    return (hours * (pi / 12)) - (pi / 2);
   }
 
   double _calculateSweepAngle(double start, double end) {
