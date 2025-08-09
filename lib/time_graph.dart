@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class TimeGraph extends StatelessWidget {
-  final TimeOfDay shutdownTime;
-  final TimeOfDay wakeupTime;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
   final double size;
 
   const TimeGraph({
     super.key,
-    required this.shutdownTime,
-    required this.wakeupTime,
+    required this.startTime,
+    required this.endTime,
     this.size = 200,
   });
 
@@ -20,20 +20,17 @@ class TimeGraph extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: TimeGraphPainter(
-          shutdownTime: shutdownTime,
-          wakeupTime: wakeupTime,
-        ),
+        painter: TimeGraphPainter(startTime: startTime, endTime: endTime),
       ),
     );
   }
 }
 
 class TimeGraphPainter extends CustomPainter {
-  final TimeOfDay shutdownTime;
-  final TimeOfDay wakeupTime;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
 
-  TimeGraphPainter({required this.shutdownTime, required this.wakeupTime});
+  TimeGraphPainter({required this.startTime, required this.endTime});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -48,8 +45,8 @@ class TimeGraphPainter extends CustomPainter {
     canvas.drawCircle(center, radius - 2, circlePaint);
 
     // Convert TimeOfDay to angles (0° is at 12 o'clock, moving clockwise)
-    final shutdownAngle = _timeToAngle(shutdownTime);
-    final wakeupAngle = _timeToAngle(wakeupTime);
+    final shutdownAngle = _timeToAngle(startTime);
+    final wakeupAngle = _timeToAngle(endTime);
 
     // Draw the arc for shutdown period
     final arcPaint = Paint()

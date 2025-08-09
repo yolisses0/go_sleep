@@ -129,8 +129,8 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Center(
                   child: TimeGraph(
-                    shutdownTime: startTime,
-                    wakeupTime: endTime,
+                    startTime: startTime,
+                    endTime: endTime,
                     size: 200,
                   ),
                 ),
