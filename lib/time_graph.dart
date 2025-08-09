@@ -96,8 +96,10 @@ class TimeGraphPainter extends CustomPainter {
       ..strokeWidth = 2;
 
     final lineStart = Offset(
-      center.dx + (radius * 0.1) * cos(currentAngle),
-      center.dy + (radius * 0.1) * sin(currentAngle),
+      center.dx +
+          (radius - 15) * cos(currentAngle), // Changed from radius * 0.1
+      center.dy +
+          (radius - 15) * sin(currentAngle), // Changed from radius * 0.1
     );
     final lineEnd = Offset(
       center.dx + radius * cos(currentAngle),
