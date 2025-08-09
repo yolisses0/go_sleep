@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class TimeGraph extends StatelessWidget {
+class TimeGraph extends StatefulWidget {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
   final double size;
@@ -15,12 +16,36 @@ class TimeGraph extends StatelessWidget {
   });
 
   @override
+  State<TimeGraph> createState() => _TimeGraphState();
+}
+
+class _TimeGraphState extends State<TimeGraph> {
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size,
-      height: size,
+      width: widget.size,
+      height: widget.size,
       child: CustomPaint(
-        painter: TimeGraphPainter(startTime: startTime, endTime: endTime),
+        painter: TimeGraphPainter(
+          startTime: widget.startTime,
+          endTime: widget.endTime,
+        ),
       ),
     );
   }
@@ -44,7 +69,7 @@ class TimeGraphPainter extends CustomPainter {
       ..strokeWidth = 4;
     canvas.drawCircle(center, radius - 2, circlePaint);
 
-    // Convert TimeOfDay to angles (0° is at 12 o'clock, moving clockwise)
+    // Convert TimeOfDay to angles
     final shutdownAngle = _timeToAngle(startTime);
     final wakeupAngle = _timeToAngle(endTime);
 
@@ -61,6 +86,24 @@ class TimeGraphPainter extends CustomPainter {
       false,
       arcPaint,
     );
+
+    // Draw current time line
+    final now = TimeOfDay.now();
+    final currentAngle = _timeToAngle(now);
+    final currentTimePaint = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final lineStart = Offset(
+      center.dx + (radius * 0.1) * cos(currentAngle),
+      center.dy + (radius * 0.1) * sin(currentAngle),
+    );
+    final lineEnd = Offset(
+      center.dx + radius * cos(currentAngle),
+      center.dy + radius * sin(currentAngle),
+    );
+    canvas.drawLine(lineStart, lineEnd, currentTimePaint);
 
     // Draw hour markers
     _drawHourMarkers(canvas, center, radius);
