@@ -36,28 +36,31 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ListView(
-          children: [
-            SwitchListTile(
-              onChanged: (value) {
-                setState(() {
-                  enabled = value;
-                });
-              },
-              title: Text("Enabled"),
-              value: enabled,
-            ),
-            ListTile(
-              title: Text("Time to shutdown"),
-              trailing: Text('${startTime.format(context)}'),
-              onTap: () => _selectTime(context, true),
-            ),
-            ListTile(
-              title: Text("Time to allow usage"),
-              trailing: Text('${endTime.format(context)}'),
-              onTap: () => _selectTime(context, false),
-            ),
-          ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: ListView(
+            children: [
+              SwitchListTile(
+                onChanged: (value) {
+                  setState(() {
+                    enabled = value;
+                  });
+                },
+                title: Text("Enabled"),
+                value: enabled,
+              ),
+              ListTile(
+                title: Text("Time to shutdown"),
+                trailing: Text('${startTime.format(context)}'),
+                onTap: () => _selectTime(context, true),
+              ),
+              ListTile(
+                title: Text("Time to allow usage"),
+                trailing: Text('${endTime.format(context)}'),
+                onTap: () => _selectTime(context, false),
+              ),
+            ],
+          ),
         ),
       ),
     );
