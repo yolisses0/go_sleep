@@ -1,20 +1,51 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  bool isDarkMode = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: HomePage(
+        isDarkMode: isDarkMode,
+        onThemeToggle: () => setState(() => isDarkMode = !isDarkMode),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  final bool isDarkMode;
+  final VoidCallback onThemeToggle;
+
+  const HomePage({
+    super.key,
+    required this.isDarkMode,
+    required this.onThemeToggle,
+  });
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   bool enabled = false;
-  TimeOfDay startTime = TimeOfDay(hour: 22, minute: 0); // 10 PM default
-  TimeOfDay endTime = TimeOfDay(hour: 7, minute: 0); // 7 AM default
+  TimeOfDay startTime = const TimeOfDay(hour: 22, minute: 0); // 10 PM default
+  TimeOfDay endTime = const TimeOfDay(hour: 7, minute: 0); // 7 AM default
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -37,7 +68,7 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 600),
+          constraints: const BoxConstraints(maxWidth: 600),
           child: ListView(
             children: [
               SwitchListTile(
@@ -46,13 +77,16 @@ class _MyAppState extends State<MyApp> {
                     enabled = value;
                   });
                 },
-                title: Text("Enabled"),
+                title: const Text("Enabled"),
                 value: enabled,
               ),
               ListTile(
-                title: Text("Time to shutdown"),
+                title: const Text("Time to shutdown"),
                 trailing: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   child: Text(
                     startTime.format(context),
                     style: Theme.of(context).textTheme.titleMedium,
@@ -61,15 +95,23 @@ class _MyAppState extends State<MyApp> {
                 onTap: () => _selectTime(context, true),
               ),
               ListTile(
-                title: Text("Time to allow usage"),
+                title: const Text("Time to allow usage"),
                 trailing: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   child: Text(
                     endTime.format(context),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 onTap: () => _selectTime(context, false),
+              ),
+              SwitchListTile(
+                onChanged: (_) => widget.onThemeToggle(),
+                title: const Text("Dark Mode"),
+                value: widget.isDarkMode,
               ),
             ],
           ),
