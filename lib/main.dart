@@ -20,6 +20,8 @@ void overlayMain() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -68,10 +70,11 @@ class _MyAppState extends State<MyApp> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-    if (platformVersion != null)
+    if (platformVersion != null) {
       setState(() {
         _platformVersion = platformVersion!;
       });
+    }
   }
 
   Future<void> _requestPermissions() async {
