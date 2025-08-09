@@ -4,21 +4,35 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool enabled = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: Color.from(alpha: 1, red: 0.2, green: 0.2, blue: 0.5),
-          foregroundColor: Color(0xffffffff),
-        ),
-      ),
       home: Scaffold(
-        appBar: AppBar(title: Text("hello")),
-        body: Center(child: Text("Go Sleep")),
+        body: Center(
+          child: ListView(
+            children: [
+              SwitchListTile(
+                onChanged: (value) {
+                  setState(() {
+                    enabled = value;
+                  });
+                },
+                title: Text("Enabled"),
+                value: enabled,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
