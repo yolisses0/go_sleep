@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
       try {
         LinuxScheduler.createService();
         LinuxScheduler.createTimer(startTime, endTime);
-        LinuxScheduler.startService();
         LinuxScheduler.startTimer();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
