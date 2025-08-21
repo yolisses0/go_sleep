@@ -47,6 +47,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  msix: ^3.16.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -88,3 +89,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+msix_config:
+  capabilities: internetClient
+  display_name: "Go Sleep: Shutdown computer"
+  execution_alias: go_sleep
+  identity_name: Yolisses.Yolissestestapp
+  logo_path: .\windows\icon.png
+  msix_version: 1.0.0.0
+  publisher_display_name: Yolisses
+  publisher: CN=6C6CB05C-E6EA-41FA-B2CD-50202F55E2C3
+  store: true
