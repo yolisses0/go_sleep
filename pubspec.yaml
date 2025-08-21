@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   pay: ^3.2.1
   system_alert_window: ^2.0.7
+  android_alarm_manager_plus: ^4.0.7
+  workmanager: ^0.9.0+2
 
 dev_dependencies:
   flutter_test:

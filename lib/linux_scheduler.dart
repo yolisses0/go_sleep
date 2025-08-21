@@ -45,38 +45,40 @@ WantedBy=default.target
     await file.delete();
   }
 
-  static List<String> createOnCalendar(TimeOfDay start, TimeOfDay end) {
+  static List<String> createOnCalendar(TimeOfDay startTime, TimeOfDay endTime) {
     final List<String> result = [];
-    final hourDifference = end.hour - start.hour;
+    final hourDifference = endTime.hour - startTime.hour;
     if (hourDifference == 0) {
-      final [first, second] = start.isAfter(end) ? [end, start] : [start, end];
-      result.add('${start.hour}:${first.minute}..${second.minute}:0/1');
-    } else if (start.isBefore(end)) {
-      result.add('${start.hour}:${start.minute}..59:0/1');
-      if (end.hour - start.hour > 1) {
-        result.add('${start.hour + 1}..${end.hour - 1}:*:0/1');
+      final [first, second] = startTime.isAfter(endTime)
+          ? [endTime, startTime]
+          : [startTime, endTime];
+      result.add('${startTime.hour}:${first.minute}..${second.minute}:0/1');
+    } else if (startTime.isBefore(endTime)) {
+      result.add('${startTime.hour}:${startTime.minute}..59:0/1');
+      if (endTime.hour - startTime.hour > 1) {
+        result.add('${startTime.hour + 1}..${endTime.hour - 1}:*:0/1');
       }
-      result.add('${end.hour}:0..${end.minute}:0/1');
+      result.add('${endTime.hour}:0..${endTime.minute}:0/1');
     } else {
-      result.add('${start.hour}:${start.minute}..59:0/1');
-      if (24 - start.hour > 1) {
-        result.add('${start.hour + 1}..23:*:0/1');
+      result.add('${startTime.hour}:${startTime.minute}..59:0/1');
+      if (24 - startTime.hour > 1) {
+        result.add('${startTime.hour + 1}..23:*:0/1');
       }
-      if (end.hour > 0) {
-        result.add('0..${end.hour - 1}:*:0/1');
+      if (endTime.hour > 0) {
+        result.add('0..${endTime.hour - 1}:*:0/1');
       }
-      result.add('${end.hour}:0..${end.minute}:0/1');
+      result.add('${endTime.hour}:0..${endTime.minute}:0/1');
     }
     return result;
   }
 
-  static void createTimer(TimeOfDay start, TimeOfDay end) async {
+  static void createTimer(TimeOfDay startTime, TimeOfDay endTime) async {
     final lines =[ ];
     lines.add('[Unit]');
     lines.add('Description=Go Sleep scheduled start');
     lines.add('[Timer]');
     lines.add('AccuracySec=100ms');
-    final onCalendars = createOnCalendar(start, end);
+    final onCalendars = createOnCalendar(startTime, endTime);
     for (var onCalendar in onCalendars) {
       lines.add('OnCalendar=$onCalendar');
     }
